@@ -29,10 +29,17 @@ def blocks(weights: list[Union[float,int]], net_force: Optional[Union[float,int]
         obj_net_force = net_acceleration*weight
         obj_data={"name": f"Block {i+1}", "weight": weight, "forces": [], "net force": obj_net_force}
         if i==0:
-            obj_data["forces"].append(["Applied", net_force])
-            obj_data["forces"].append(["Contact Reaction", obj_net_force-net_force])
+            if net_force>=0:
+                obj_data["forces"].append(["Applied", net_force])
+                obj_data["forces"].append(["Contact Reaction", obj_net_force-net_force])
+            else:
+                obj_data["forces"].append(["Contact", obj_net_force])
         elif i==len(weights)-1:
-            obj_data["forces"].append(["Contact", obj_net_force])
+            if net_force<0:
+                obj_data["forces"].append(["Applied", net_force])
+                obj_data["forces"].append(["Contact Reaction", obj_net_force-net_force])
+            else:
+                obj_data["forces"].append(["Contact", obj_net_force])
         else:
             obj_data["forces"].append(["Contact", -1*ans['forces'][i-1]['forces'][-1][1]])
             obj_data["forces"].append(["Contact Reaction", obj_net_force-obj_data['forces'][0][1]])
@@ -62,10 +69,7 @@ for example in examples:
     print("Net force of system:", f"{data['net force']:.2f}N")
     print("Forces on each block:")
     for block in data['forces']:
-        print(block["name"], "|", f"{block['weight']:.2f}Kg", "| ",end="")
+        print(block["name"], "|", f"{block['weight']:.2f}Kg", "|", f"{block['net force']:.2f}N", "| ",end="")
         print(", ".join([f"{x[0]}: {x[1]:.2f}N" for x in block["forces"]]))
 
 print("-"*50)
-
-
-# haha line 67
