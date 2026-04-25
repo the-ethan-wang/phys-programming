@@ -9,6 +9,7 @@ code all by me owo
 - jump height
 - elastic collision
 - blocks, ~~strings, pulleys~~ (still WIP)
+- particle sim (WIP)
 
 ## Usage
 
